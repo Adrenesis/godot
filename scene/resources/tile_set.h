@@ -152,6 +152,8 @@ protected:
 public:
 	void create_tile(int p_id);
 
+    void tile_swap_with_id(int p_id_a, int p_id_b);
+
 	void autotile_set_bitmask_mode(int p_id, BitmaskMode p_mode);
 	BitmaskMode autotile_get_bitmask_mode(int p_id) const;
 
