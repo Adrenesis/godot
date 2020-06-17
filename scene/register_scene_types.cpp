@@ -611,6 +611,7 @@ void register_scene_types() {
 	ClassDB::register_class<CubeMesh>();
 	ClassDB::register_class<CylinderMesh>();
 	ClassDB::register_class<PlaneMesh>();
+    ClassDB::register_class<PlaneMesh2D>();
 	ClassDB::register_class<PrismMesh>();
 	ClassDB::register_class<QuadMesh>();
 	ClassDB::register_class<SphereMesh>();

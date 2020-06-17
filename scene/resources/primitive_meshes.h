@@ -227,6 +227,36 @@ public:
 };
 
 /**
+	Similar to quadmesh but with tessellation support for 2D
+*/
+class PlaneMesh2D : public PrimitiveMesh {
+
+    GDCLASS(PlaneMesh2D, PrimitiveMesh);
+
+private:
+    Size2 size;
+    int subdivide_w;
+    int subdivide_h;
+
+protected:
+    static void _bind_methods();
+    virtual void _create_mesh_array(Array &p_arr) const;
+
+public:
+    void set_size(const Size2 &p_size);
+    Size2 get_size() const;
+
+    void set_subdivide_width(const int p_divisions);
+    int get_subdivide_width() const;
+
+    void set_subdivide_height(const int p_divisions);
+    int get_subdivide_height() const;
+
+    PlaneMesh2D();
+};
+
+
+/**
 	A prism shapen, handy for ramps, triangles, etc.
 */
 class PrismMesh : public PrimitiveMesh {

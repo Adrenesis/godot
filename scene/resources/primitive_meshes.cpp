@@ -1063,6 +1063,119 @@ PlaneMesh::PlaneMesh() {
 }
 
 /**
+  PlaneMesh2D
+*/
+
+void PlaneMesh2D::_create_mesh_array(Array &p_arr) const {
+    int i, j, prevrow, thisrow, point;
+    float x, y;
+
+    Size2 start_pos = size * -0.5;
+
+    PoolVector<Vector3> points;
+    PoolVector<Vector3> normals;
+    PoolVector<float> tangents;
+    PoolVector<Vector2> uvs;
+    PoolVector<int> indices;
+    point = 0;
+
+#define ADD_TANGENT(m_x, m_y, m_z, m_d) \
+	tangents.push_back(m_x);            \
+	tangents.push_back(m_y);            \
+	tangents.push_back(m_z);            \
+	tangents.push_back(m_d);
+
+    /* top + bottom */
+    y = start_pos.y;
+    thisrow = point;
+    prevrow = 0;
+    for (j = 0; j <= (subdivide_h + 1); j++) {
+        x = start_pos.x;
+        for (i = 0; i <= (subdivide_w + 1); i++) {
+            float u = i;
+            float v = j;
+            u /= (subdivide_w + 1.0);
+            v /= (subdivide_h + 1.0);
+
+            points.push_back(Vector3(-x, -y, 0.0));
+            normals.push_back(Vector3(0.0, 0.0, 1.0));
+            ADD_TANGENT(1.0, 0.0, 0.0, 1.0);
+            uvs.push_back(Vector2(1.0 - u, 1.0 - v)); /* 1.0 - uv to match orientation with Quad */
+            point++;
+
+            if (i > 0 && j > 0) {
+                indices.push_back(prevrow + i - 1);
+                indices.push_back(prevrow + i);
+                indices.push_back(thisrow + i - 1);
+                indices.push_back(prevrow + i);
+                indices.push_back(thisrow + i);
+                indices.push_back(thisrow + i - 1);
+            };
+
+            x += size.x / (subdivide_w + 1.0);
+        };
+
+        y += size.y / (subdivide_h + 1.0);
+        prevrow = thisrow;
+        thisrow = point;
+    };
+
+    p_arr[VS::ARRAY_VERTEX] = points;
+    p_arr[VS::ARRAY_NORMAL] = normals;
+    p_arr[VS::ARRAY_TANGENT] = tangents;
+    p_arr[VS::ARRAY_TEX_UV] = uvs;
+    p_arr[VS::ARRAY_INDEX] = indices;
+}
+
+void PlaneMesh2D::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("set_size", "size"), &PlaneMesh2D::set_size);
+    ClassDB::bind_method(D_METHOD("get_size"), &PlaneMesh2D::get_size);
+
+    ClassDB::bind_method(D_METHOD("set_subdivide_width", "subdivide"), &PlaneMesh2D::set_subdivide_width);
+    ClassDB::bind_method(D_METHOD("get_subdivide_width"), &PlaneMesh2D::get_subdivide_width);
+    ClassDB::bind_method(D_METHOD("set_subdivide_height", "subdivide"), &PlaneMesh2D::set_subdivide_height);
+    ClassDB::bind_method(D_METHOD("get_subdivide_height"), &PlaneMesh2D::get_subdivide_height);
+
+    ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "size"), "set_size", "get_size");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_width", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_width", "get_subdivide_width");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "subdivide_height", PROPERTY_HINT_RANGE, "0,100,1,or_greater"), "set_subdivide_height", "get_subdivide_height");
+}
+
+void PlaneMesh2D::set_size(const Size2 &p_size) {
+    size = p_size;
+    _request_update();
+}
+
+Size2 PlaneMesh2D::get_size() const {
+    return size;
+}
+
+void PlaneMesh2D::set_subdivide_width(const int p_divisions) {
+    subdivide_w = p_divisions > 0 ? p_divisions : 0;
+    _request_update();
+}
+
+int PlaneMesh2D::get_subdivide_width() const {
+    return subdivide_w;
+}
+
+void PlaneMesh2D::set_subdivide_height(const int p_divisions) {
+    subdivide_h = p_divisions > 0 ? p_divisions : 0;
+    _request_update();
+}
+
+int PlaneMesh2D::get_subdivide_height() const {
+    return subdivide_h;
+}
+
+PlaneMesh2D::PlaneMesh2D() {
+    // defaults
+    size = Size2(2.0, 2.0);
+    subdivide_w = 0;
+    subdivide_h = 0;
+}
+
+/**
   PrismMesh
 */
 
