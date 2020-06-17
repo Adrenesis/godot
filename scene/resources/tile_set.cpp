@@ -374,6 +374,12 @@ void TileSet::create_tile(int p_id) {
 	emit_changed();
 }
 
+void TileSet::tile_swap_with_id(int p_id_a, int p_id_b) {
+    TileData tmp = tile_map[p_id_a];
+    tile_map[p_id_a] = tile_map[p_id_b];
+    tile_map[p_id_b] = tmp;
+}
+
 void TileSet::autotile_set_bitmask_mode(int p_id, BitmaskMode p_mode) {
 	ERR_FAIL_COND(!tile_map.has(p_id));
 	tile_map[p_id].autotile_data.bitmask_mode = p_mode;
@@ -1155,6 +1161,7 @@ void TileSet::clear() {
 void TileSet::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("create_tile", "id"), &TileSet::create_tile);
+    ClassDB::bind_method(D_METHOD("swap_with_id", "ida", "idb"), &TileSet::tile_swap_with_id);
 	ClassDB::bind_method(D_METHOD("autotile_clear_bitmask_map", "id"), &TileSet::autotile_clear_bitmask_map);
 	ClassDB::bind_method(D_METHOD("autotile_set_icon_coordinate", "id", "coord"), &TileSet::autotile_set_icon_coordinate);
 	ClassDB::bind_method(D_METHOD("autotile_get_icon_coordinate", "id"), &TileSet::autotile_get_icon_coordinate);
