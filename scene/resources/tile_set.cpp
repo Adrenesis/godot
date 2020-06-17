@@ -1161,7 +1161,7 @@ void TileSet::clear() {
 void TileSet::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("create_tile", "id"), &TileSet::create_tile);
-    ClassDB::bind_method(D_METHOD("swap_with_id", "ida", "idb"), &TileSet::tile_swap_with_id);
+    ClassDB::bind_method(D_METHOD("tile_swap_with_id", "ida", "idb"), &TileSet::tile_swap_with_id);
 	ClassDB::bind_method(D_METHOD("autotile_clear_bitmask_map", "id"), &TileSet::autotile_clear_bitmask_map);
 	ClassDB::bind_method(D_METHOD("autotile_set_icon_coordinate", "id", "coord"), &TileSet::autotile_set_icon_coordinate);
 	ClassDB::bind_method(D_METHOD("autotile_get_icon_coordinate", "id"), &TileSet::autotile_get_icon_coordinate);
