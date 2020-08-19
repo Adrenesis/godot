@@ -671,6 +671,10 @@ Error AudioDriverPulseAudio::capture_init_device() {
 			break;
 	}
 
+	// This print line is enough to fix the microphone bug on my machine,
+	// which therefore smells like a race condition.
+	print_verbose("PulseAudio: detected " + itos(pa_rec_map.channels) + " input channels");
+
 	pa_sample_spec spec;
 
 	spec.format = PA_SAMPLE_S16LE;
