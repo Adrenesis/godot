@@ -50,9 +50,12 @@ class AudioEffectRecordInstance : public AudioEffectInstance {
 	bool is_recording;
 	Thread *io_thread;
 	bool thread_active;
+#ifndef NO_THREADS
+	Mutex *mutex_recording_data;
+#endif
 
 	Vector<AudioFrame> ring_buffer;
-	Vector<float> recording_data;
+	PoolVector<uint8_t> recording_data;
 
 	unsigned int ring_buffer_pos;
 	unsigned int ring_buffer_mask;
@@ -71,8 +74,11 @@ public:
 	virtual void process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count);
 	virtual bool process_silence() const;
 
-	AudioEffectRecordInstance() :
-			thread_active(false) {}
+	AudioEffectRecordInstance() : thread_active(false) {
+#ifndef NO_THREADS
+		mutex_recording_data = Mutex::create();
+#endif
+	}
 	~AudioEffectRecordInstance();
 };
 
