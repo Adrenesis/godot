@@ -125,6 +125,7 @@ void AudioEffectRecordInstance::init() {
 #ifdef NO_THREADS
 	AudioServer::get_singleton()->add_update_callback(&AudioEffectRecordInstance::_update, this);
 #else
+	mutex_recording_data = Mutex::create();
 	io_thread = Thread::create(_thread_callback, this);
 #endif
 }
