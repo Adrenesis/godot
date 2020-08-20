@@ -89,7 +89,9 @@ void AudioEffectRecordInstance::_io_store_buffer() {
 	int to_read = ring_buffer_pos - ring_buffer_read_pos;
 
 	AudioFrame *rb_buf = ring_buffer.ptrw();
-
+#ifndef NO_THREADS
+	mutex_recording_data->lock();
+#endif
 	while (to_read) {
 		AudioFrame buffered_frame = rb_buf[ring_buffer_read_pos & ring_buffer_mask];
 		recording_data.push_back(buffered_frame.l);
@@ -98,6 +100,9 @@ void AudioEffectRecordInstance::_io_store_buffer() {
 		ring_buffer_read_pos++;
 		to_read--;
 	}
+#ifndef NO_THREADS
+	mutex_recording_data->unlock();
+#endif
 }
 
 void AudioEffectRecordInstance::_thread_callback(void *_instance) {
@@ -115,6 +120,7 @@ void AudioEffectRecordInstance::init() {
 	//We start a new recording
 	recording_data.resize(0); //Clear data completely and reset length
 	is_recording = true;
+
 
 #ifdef NO_THREADS
 	AudioServer::get_singleton()->add_update_callback(&AudioEffectRecordInstance::_update, this);
@@ -137,6 +143,10 @@ void AudioEffectRecordInstance::finish() {
 AudioEffectRecordInstance::~AudioEffectRecordInstance() {
 
 	finish();
+
+#ifndef NO_THREADS
+	memdelete(mutex_recording_data);
+#endif
 }
 
 Ref<AudioEffectInstance> AudioEffectRecord::instance() {
@@ -220,6 +230,10 @@ Ref<AudioStreamSample> AudioEffectRecord::get_recording() const {
 	ERR_FAIL_COND_V(current_instance.is_null(), NULL);
 	ERR_FAIL_COND_V(current_instance->recording_data.size() == 0, NULL);
 
+#ifndef NO_THREADS
+	current_instance->mutex_recording_data->lock();
+#endif
+
 	if (dst_format == AudioStreamSample::FORMAT_8_BITS) {
 		int data_size = current_instance->recording_data.size();
 		dst_data.resize(data_size);
@@ -272,6 +286,10 @@ Ref<AudioStreamSample> AudioEffectRecord::get_recording() const {
 	} else {
 		ERR_PRINT("Format not implemented.");
 	}
+
+#ifndef NO_THREADS
+	current_instance->mutex_recording_data->unlock();
+#endif
 
 	Ref<AudioStreamSample> sample;
 	sample.instance();
