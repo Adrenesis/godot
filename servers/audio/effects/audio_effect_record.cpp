@@ -30,12 +30,6 @@
 
 #include "audio_effect_record.h"
 
-AudioEffectRecordInstance::AudioEffectRecordInstance(void) {
-#ifndef NO_THREADS
-	mutex_recording_data = Mutex::create();
-#endif
-}
-
 void AudioEffectRecordInstance::process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) {
 	if (!is_recording) {
 		for (int i = 0; i < p_frame_count; i++) {
