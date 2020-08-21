@@ -30,6 +30,12 @@
 
 #include "audio_effect_record.h"
 
+AudioEffectRecordInstance::AudioEffectRecordInstance(void) {
+#ifndef NO_THREADS
+	mutex_recording_data = Mutex::create();
+#endif
+}
+
 void AudioEffectRecordInstance::process(const AudioFrame *p_src_frames, AudioFrame *p_dst_frames, int p_frame_count) {
 	if (!is_recording) {
 		for (int i = 0; i < p_frame_count; i++) {
@@ -125,7 +131,6 @@ void AudioEffectRecordInstance::init() {
 #ifdef NO_THREADS
 	AudioServer::get_singleton()->add_update_callback(&AudioEffectRecordInstance::_update, this);
 #else
-	mutex_recording_data = Mutex::create();
 	io_thread = Thread::create(_thread_callback, this);
 #endif
 }
