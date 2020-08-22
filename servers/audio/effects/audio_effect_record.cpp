@@ -90,7 +90,7 @@ void AudioEffectRecordInstance::_io_store_buffer() {
 
 	AudioFrame *rb_buf = ring_buffer.ptrw();
 
-	AudioStreamSample::Format dst_format = base->format;
+	//AudioStreamSample::Format dst_format = base->format;
 
 	while (to_read) {
 #ifndef NO_THREADS
@@ -126,6 +126,7 @@ void AudioEffectRecordInstance::_io_store_buffer() {
 //				recording_data.push_back(rl[i]);
 //				recording_data.push_back(rr[i]);
 //			}
+			ERR_PRINT("Format IMA_ADPCM not implemented in Amethyst. (yet)");
 		} else {
 			ERR_PRINT("Format not implemented.");
 		}
@@ -146,7 +147,6 @@ void AudioEffectRecordInstance::_thread_callback(void *_instance) {
 }
 
 void AudioEffectRecordInstance::init() {
-	WARN_PRINT("init")
 	//Reset recorder status
 	ring_buffer_pos = 0;
 	ring_buffer_read_pos = 0;
@@ -158,7 +158,6 @@ void AudioEffectRecordInstance::init() {
 #ifdef NO_THREADS
 	AudioServer::get_singleton()->add_update_callback(&AudioEffectRecordInstance::_update, this);
 #else
-	mutex_recording_data = Mutex::create();
 	io_thread = Thread::create(_thread_callback, this);
 #endif
 }
