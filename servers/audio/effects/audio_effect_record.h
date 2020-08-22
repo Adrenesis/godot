@@ -55,7 +55,7 @@ class AudioEffectRecordInstance : public AudioEffectInstance {
 #endif
 
 	Vector<AudioFrame> ring_buffer;
-	Vector<float> recording_data;
+	PoolVector<uint8_t> recording_data;
 
 	unsigned int ring_buffer_pos;
 	unsigned int ring_buffer_mask;
