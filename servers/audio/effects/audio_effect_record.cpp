@@ -90,8 +90,6 @@ void AudioEffectRecordInstance::_io_store_buffer() {
 
 	AudioFrame *rb_buf = ring_buffer.ptrw();
 
-	//AudioStreamSample::Format dst_format = base->format;
-
 	while (to_read) {
 #ifndef NO_THREADS
 		mutex_recording_data->lock();
