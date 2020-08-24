@@ -30,6 +30,9 @@ Here is a quick overview of versions
 Amethyst:
 - merge planemesh2d
 - merge tiledata-swap
+- merge audio-fix-get-recording-cowdata
+- merge audio-get-recording-size
+- merge 3.2-monkey-fix-linux-clean
 
 ## Godot Engine
 
