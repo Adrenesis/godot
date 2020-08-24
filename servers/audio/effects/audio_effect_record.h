@@ -100,6 +100,7 @@ public:
 	Ref<AudioEffectInstance> instance();
 	void set_recording_active(bool p_record);
 	bool is_recording_active() const;
+    int get_recording_size() const;
 	void set_format(AudioStreamSample::Format p_format);
 	AudioStreamSample::Format get_format() const;
 	Ref<AudioStreamSample> get_recording() const;

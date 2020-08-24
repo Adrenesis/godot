@@ -203,6 +203,10 @@ bool AudioEffectRecord::is_recording_active() const {
 	return recording_active;
 }
 
+int AudioEffectRecord::get_recording_size() const {
+    return current_instance->recording_data.size();
+}
+
 void AudioEffectRecord::set_format(AudioStreamSample::Format p_format) {
 	format = p_format;
 }
@@ -292,6 +296,7 @@ void AudioEffectRecord::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_format", "format"), &AudioEffectRecord::set_format);
 	ClassDB::bind_method(D_METHOD("get_format"), &AudioEffectRecord::get_format);
 	ClassDB::bind_method(D_METHOD("get_recording"), &AudioEffectRecord::get_recording);
+    ClassDB::bind_method(D_METHOD("get_recording_size"), &AudioEffectRecord::get_recording_size);
 
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "format", PROPERTY_HINT_ENUM, "8-Bit,16-Bit,IMA-ADPCM"), "set_format", "get_format");
 }
